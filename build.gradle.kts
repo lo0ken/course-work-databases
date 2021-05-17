@@ -3,9 +3,10 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
 	id("org.springframework.boot") version "2.4.3"
 	id("io.spring.dependency-management") version "1.0.11.RELEASE"
-	war
+	id("org.jetbrains.kotlin.plugin.jpa") version "1.3.50"
 	kotlin("jvm") version "1.4.30"
 	kotlin("plugin.spring") version "1.4.30"
+	kotlin("kapt") version "1.3.61"
 }
 
 group = "com.friendly-money"
@@ -33,9 +34,15 @@ dependencies {
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	runtimeOnly("org.postgresql:postgresql")
 	annotationProcessor("org.projectlombok:lombok")
-	providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.security:spring-security-test")
+	implementation("jakarta.xml.bind:jakarta.xml.bind-api:2.3.2")
+	implementation("org.glassfish.jaxb:jaxb-runtime:2.3.2")
+
+	implementation("org.mapstruct:mapstruct:1.4.2.Final")
+	kapt("org.mapstruct:mapstruct-processor:1.4.2.Final")
+
+	implementation("io.jsonwebtoken:jjwt:0.2")
 }
 
 tasks.withType<KotlinCompile> {
