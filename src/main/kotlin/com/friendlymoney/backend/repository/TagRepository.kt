@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository
 interface TagRepository: JpaRepository<TagEntity, Int> {
 
     fun findAllByTypeIdAndUserId(typeId: Int, userId: Int): List<TagEntity>
+
+    fun findByNameAndUserId(name: String, userId: Int): TagEntity
 }
