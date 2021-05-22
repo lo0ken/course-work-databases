@@ -23,7 +23,8 @@ class AccountBalanceServiceImpl(
             val entity = AccountBalanceEntity(
                     currencyCode = currencyCode,
                     balance = balance,
-                    accountId = accountId
+                    accountId = accountId,
+                    id = accountBalanceRepository.findByAccountIdAndCurrencyCode(accountId, currencyCode)?.id
             )
 
             accountBalanceRepository.save(entity)

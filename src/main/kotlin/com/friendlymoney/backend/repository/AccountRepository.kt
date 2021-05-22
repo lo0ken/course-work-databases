@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository
 interface AccountRepository: JpaRepository<AccountEntity, Int> {
 
     fun findAllByUserId(userId: Int): List<AccountEntity>
+
+    fun findByKey(key: String): AccountEntity?
 }
