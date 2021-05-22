@@ -40,6 +40,7 @@ class AccountServiceImpl(
         val accountGroup = accountGroupRepository.findByCode(saveAccountRequest.group)
 
         val account = AccountEntity(
+                id = accountRepository.findByKey(saveAccountRequest.id)?.id,
                 key = saveAccountRequest.id,
                 name = saveAccountRequest.name,
                 group = accountGroup,
