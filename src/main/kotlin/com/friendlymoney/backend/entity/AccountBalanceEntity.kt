@@ -1,9 +1,9 @@
 package com.friendlymoney.backend.entity
 
 import javax.persistence.Entity
+import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
 import javax.persistence.Id
-import javax.persistence.JoinColumn
-import javax.persistence.ManyToOne
 import javax.persistence.Table
 
 @Entity
@@ -11,15 +11,12 @@ import javax.persistence.Table
 class AccountBalanceEntity (
 
         @Id
-        val id: Int,
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        val id: Int? = null,
 
-        @ManyToOne
-        @JoinColumn(name = "account_id")
-        val account: AccountEntity,
+        val accountId: Int,
 
-        @ManyToOne
-        @JoinColumn(name = "currency_code")
-        val currency: CurrencyEntity,
+        val currencyCode: String,
 
         val balance: Int
 )

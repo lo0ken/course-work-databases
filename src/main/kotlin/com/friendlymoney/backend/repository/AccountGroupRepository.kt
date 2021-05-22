@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface AccountGroupRepository: JpaRepository<AccountGroupEntity, String> {
+
+    fun findByCode(code: String): AccountGroupEntity
 }
