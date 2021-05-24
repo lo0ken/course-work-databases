@@ -7,15 +7,16 @@ import com.friendlymoney.backend.repository.AccountRepository
 import com.friendlymoney.backend.repository.TagRepository
 import com.friendlymoney.backend.repository.TransactionRepository
 import com.friendlymoney.backend.repository.TransactionToTagRepository
+import com.friendlymoney.backend.service.AccountBalanceService
 import com.friendlymoney.backend.service.TransactionService
+import com.friendlymoney.backend.util.LocalDateUtil
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.time.LocalDate
-import java.time.ZoneId
 
 @Service
 @Transactional
 class TransactionServiceImpl(
+        private val accountBalanceService: AccountBalanceService,
         private val accountRepository: AccountRepository,
         private val tagRepository: TagRepository,
         private val transactionRepository: TransactionRepository,
@@ -28,7 +29,7 @@ class TransactionServiceImpl(
                 key = saveTransactionRequest.id,
                 amount = saveTransactionRequest.amount,
                 note = saveTransactionRequest.note,
-                date = LocalDate.ofInstant(saveTransactionRequest.date, ZoneId.systemDefault()),
+                date = LocalDateUtil.longToDate(saveTransactionRequest.date),
                 typeId = saveTransactionRequest.kind,
                 currencyCode = saveTransactionRequest.currency,
                 linkedAmount = saveTransactionRequest.linkedAmount,
@@ -43,5 +44,7 @@ class TransactionServiceImpl(
                     tagId = tagRepository.findByNameAndUserId(tagName, 1).id!! // todo: user from security
             ))
         }
+
+        accountBalanceService.mutateBalance(savedTransaction.accountId, savedTransaction.currencyCode, savedTransaction.amount)
     }
 }

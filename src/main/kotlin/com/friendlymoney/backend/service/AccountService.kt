@@ -7,5 +7,7 @@ interface AccountService {
 
     fun getAll(): List<Account>
 
+    fun getByKey(key: String): Account
+
     fun createAccount(saveAccountRequest: SaveAccountRequest): Account
 }

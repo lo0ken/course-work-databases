@@ -14,8 +14,8 @@ class TransactionController(
 ) {
 
     @PostMapping("/save")
-    fun save(@RequestBody saveTransactionRequest: SaveTransactionRequest) {
+    fun save(@RequestBody saveTransactionRequest: SaveTransactionRequest): SaveTransactionRequest {
         transactionService.save(saveTransactionRequest)
-        print(saveTransactionRequest)
+        return saveTransactionRequest
     }
 }

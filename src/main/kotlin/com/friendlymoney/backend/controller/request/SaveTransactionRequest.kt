@@ -1,13 +1,11 @@
 package com.friendlymoney.backend.controller.request
 
-import java.time.Instant
-
 
 data class SaveTransactionRequest(
         val id: String,
         val accountId: String,
         val amount: Int,
-        val date: Instant,
+        val date: Long,
         val kind: Int,
         val currency: String,
         val linkedAccountId: String?,

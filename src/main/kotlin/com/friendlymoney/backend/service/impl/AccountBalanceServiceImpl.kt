@@ -30,4 +30,10 @@ class AccountBalanceServiceImpl(
             accountBalanceRepository.save(entity)
         }
     }
+
+    override fun mutateBalance(accountId: Int, currencyCode: String, amount: Int) {
+        val balanceEntity = accountBalanceRepository.findByAccountIdAndCurrencyCode(accountId, currencyCode)!!
+        balanceEntity.balance += amount
+        accountBalanceRepository.save(balanceEntity)
+    }
 }

@@ -18,5 +18,5 @@ class AccountBalanceEntity (
 
         val currencyCode: String,
 
-        val balance: Int
+        var balance: Int
 )

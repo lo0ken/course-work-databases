@@ -35,6 +35,18 @@ class AccountServiceImpl(
         }
     }
 
+    override fun getByKey(key: String): Account {
+        val accountEntity = accountRepository.findByKey(key)
+        val balanceMap = accountBalanceService.getBalanceMapByAccountId(accountEntity!!.id!!)
+        return Account(
+                _id = accountEntity.key,
+                name = accountEntity.name,
+                group = accountEntity.group.code,
+                balance = balanceMap,
+                currencies = balanceMap.keys
+        )
+    }
+
 
     override fun createAccount(saveAccountRequest: SaveAccountRequest): Account {
         val accountGroup = accountGroupRepository.findByCode(saveAccountRequest.group)
