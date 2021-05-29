@@ -4,7 +4,9 @@ import com.friendlymoney.backend.controller.request.SaveTransactionRequest
 import com.friendlymoney.backend.dto.Transaction
 import com.friendlymoney.backend.service.TransactionService
 import com.friendlymoney.backend.util.LocalDateUtil
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -37,5 +39,12 @@ class TransactionController(
     fun save(@RequestBody saveTransactionRequest: SaveTransactionRequest): SaveTransactionRequest {
         transactionService.save(saveTransactionRequest)
         return saveTransactionRequest
+    }
+
+    @DeleteMapping("/delete/{transactionKey}")
+    fun delete(@PathVariable transactionKey: String): Transaction {
+        val transaction = transactionService.findByKey(transactionKey)
+        transactionService.deleteByKey(transactionKey)
+        return transaction
     }
 }

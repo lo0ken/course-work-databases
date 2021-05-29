@@ -14,7 +14,7 @@ create table transaction(
 
     type_id int references transaction_type(id) not null,
     currency_code varchar references currency(code) not null,
-    account_id int references account(id) not null,
+    account_id int references account(id) on delete cascade not null,
     linked_account_id int references account(id),
     linked_amount int,
     linked_currency_code varchar references currency(code),
@@ -23,6 +23,6 @@ create table transaction(
 
 create table transaction_tag(
     id serial primary key,
-    transaction_id int references transaction(id),
+    transaction_id int references transaction(id) on delete cascade,
     tag_id int references tag(id)
 )

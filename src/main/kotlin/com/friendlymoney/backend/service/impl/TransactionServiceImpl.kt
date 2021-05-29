@@ -27,6 +27,12 @@ class TransactionServiceImpl(
         private val transactionRepository: TransactionRepository,
         private val transactionToTagRepository: TransactionToTagRepository
 ): TransactionService {
+
+    override fun findByKey(key: String): Transaction {
+        val entity = transactionRepository.findByKey(key)
+        return entityToDto(entity!!)
+    }
+
     override fun findRecent(limit: Int): List<Transaction> {
         val pageable = PageRequest.of(0, limit, Sort.by("date").descending())
 
@@ -42,15 +48,28 @@ class TransactionServiceImpl(
     }
 
     private fun entityToDto(transactionEntity: TransactionEntity): Transaction {
-        return TRANSACTION_MAPPER.convertToDto(
+        val converted = TRANSACTION_MAPPER.convertToDto(
                 transactionEntity,
                 accountRepository.findById(transactionEntity.accountId).get().key,
         )
+
+        if (transactionEntity.linkedAccountId != null) {
+            converted.linkedAccountId = accountRepository.findById(transactionEntity.linkedAccountId).map {
+                it.key
+            }.orElse(null)
+        }
+
+        converted.tags = tagRepository.findAllByTransactionId(transactionEntity.id!!).map {
+            it.name
+        }.toSet()
+
+        return converted
     }
 
     override fun save(saveTransactionRequest: SaveTransactionRequest) {
 
         val savedTransaction = transactionRepository.save(TransactionEntity(
+                id = transactionRepository.findByKey(saveTransactionRequest.id)?.id,
                 key = saveTransactionRequest.id,
                 amount = saveTransactionRequest.amount,
                 note = saveTransactionRequest.note,
@@ -71,5 +90,9 @@ class TransactionServiceImpl(
         }
 
         accountBalanceService.mutateBalance(savedTransaction.accountId, savedTransaction.currencyCode, savedTransaction.amount)
+    }
+
+    override fun deleteByKey(transactionKey: String) {
+        transactionRepository.deleteByKey(transactionKey)
     }
 }

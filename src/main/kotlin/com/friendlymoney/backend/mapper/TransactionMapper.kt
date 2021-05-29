@@ -18,6 +18,7 @@ interface TransactionMapper {
             Mapping(target = "kind", source = "entity.typeId"),
             Mapping(target = "currency", source = "entity.currencyCode"),
             Mapping(target = "accountId", source = "accountId"),
+            Mapping(target = "linkedAccountId", ignore = true)
     )
     fun convertToDto(entity: TransactionEntity, accountId: String): Transaction
 }

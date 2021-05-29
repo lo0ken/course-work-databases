@@ -15,12 +15,14 @@ interface TransactionRepository: JpaRepository<TransactionEntity, Int> {
     @Query("select t from TransactionEntity t join AccountEntity a on t.accountId = a.id where a.userId = :userId")
     fun findAllByUserId(userId: Int, pageable: Pageable): Page<TransactionEntity>
 
+    fun findByKey(key: String): TransactionEntity?
+
 
     @Query(
-            "select distinct t.* from transaction t " +
+            "select t.* from transaction t " +
                     "join account acc on t.account_id = acc.id " +
-                    "join transaction_tag tt on t.id = tt.transaction_id " +
-                    "join tag on tt.tag_id = tag.id " +
+                    "left join transaction_tag tt on t.id = tt.transaction_id " +
+                    "left join tag on tt.tag_id = tag.id " +
                     "where acc.user_id = :userId " +
                     "and t.date >= :startDate " +
                     "and t.date <= :endDate",
@@ -30,4 +32,6 @@ interface TransactionRepository: JpaRepository<TransactionEntity, Int> {
                      @Param("endDate") endDate: LocalDate,
                      userId: Int
     ): List<TransactionEntity>
+
+    fun deleteByKey(key: String)
 }
