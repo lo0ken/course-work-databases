@@ -10,4 +10,6 @@ interface AccountService {
     fun getByKey(key: String): Account
 
     fun createAccount(saveAccountRequest: SaveAccountRequest): Account
+
+    fun deleteByKey(key: String)
 }

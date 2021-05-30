@@ -8,7 +8,7 @@ create table account(
 
 create table account_balance(
     id serial primary key,
-    account_id int references account(id),
+    account_id int references account(id) on delete cascade,
     currency_code varchar references currency(code),
     balance int not null
 );

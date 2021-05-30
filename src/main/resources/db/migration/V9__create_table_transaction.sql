@@ -15,7 +15,7 @@ create table transaction(
     type_id int references transaction_type(id) not null,
     currency_code varchar references currency(code) not null,
     account_id int references account(id) on delete cascade not null,
-    linked_account_id int references account(id),
+    linked_account_id int references account(id) on delete cascade,
     linked_amount int,
     linked_currency_code varchar references currency(code),
     key varchar not null unique

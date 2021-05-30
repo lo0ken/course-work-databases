@@ -10,4 +10,6 @@ interface AccountRepository: JpaRepository<AccountEntity, Int> {
     fun findAllByUserId(userId: Int): List<AccountEntity>
 
     fun findByKey(key: String): AccountEntity?
+
+    fun deleteByKey(key: String)
 }

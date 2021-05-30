@@ -71,4 +71,8 @@ class AccountServiceImpl(
                 currencies = saveAccountRequest.balance.keys
         )
     }
+
+    override fun deleteByKey(key: String) {
+        accountRepository.deleteByKey(key)
+    }
 }
