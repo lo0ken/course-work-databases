@@ -67,9 +67,14 @@ class TransactionServiceImpl(
     }
 
     override fun save(saveTransactionRequest: SaveTransactionRequest) {
+        val existedTransaction = transactionRepository.findByKey(saveTransactionRequest.id)
+
+        if (existedTransaction != null && existedTransaction.typeId != saveTransactionRequest.kind) {
+            transactionToTagRepository.deleteAllByTransactionId(existedTransaction.id!!)
+        }
 
         val savedTransaction = transactionRepository.save(TransactionEntity(
-                id = transactionRepository.findByKey(saveTransactionRequest.id)?.id,
+                id = existedTransaction?.id,
                 key = saveTransactionRequest.id,
                 amount = saveTransactionRequest.amount,
                 note = saveTransactionRequest.note,

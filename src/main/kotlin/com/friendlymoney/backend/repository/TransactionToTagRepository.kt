@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface TransactionToTagRepository: JpaRepository<TransactionToTagEntity, Int> {
+
+    fun deleteAllByTransactionId(transactionId: Int)
 }
