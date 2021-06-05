@@ -44,10 +44,10 @@ class SecurityConfig(): WebSecurityConfigurerAdapter() {
                 .authorizeRequests().anyRequest().permitAll()
     }
 
-    /*@Bean
+    @Bean
     override fun authenticationManagerBean(): AuthenticationManager {
         return super.authenticationManagerBean()
-    }*/
+    }
 
     @Bean
     fun passwordEncoder(): BCryptPasswordEncoder {
