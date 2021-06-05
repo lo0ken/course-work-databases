@@ -11,6 +11,7 @@ import com.friendlymoney.backend.repository.TransactionRepository
 import com.friendlymoney.backend.repository.TransactionToTagRepository
 import com.friendlymoney.backend.service.AccountBalanceService
 import com.friendlymoney.backend.service.TransactionService
+import com.friendlymoney.backend.service.UserService
 import com.friendlymoney.backend.util.LocalDateUtil
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -21,6 +22,7 @@ import java.time.LocalDate
 @Service
 @Transactional
 class TransactionServiceImpl(
+        private val userService: UserService,
         private val accountBalanceService: AccountBalanceService,
         private val accountRepository: AccountRepository,
         private val tagRepository: TagRepository,
@@ -36,13 +38,13 @@ class TransactionServiceImpl(
     override fun findRecent(limit: Int): List<Transaction> {
         val pageable = PageRequest.of(0, limit, Sort.by("date").descending())
 
-        val entities = transactionRepository.findAllByUserId(1, pageable).content // todo: userId from security
+        val entities = transactionRepository.findAllByUserId(userService.getCurrentUserId(), pageable).content
 
         return entities.map {entityToDto(it) }
     }
 
     override fun filterByDate(startDate: LocalDate, endDate: LocalDate): List<Transaction> {
-        val entities = transactionRepository.findFiltered(startDate, endDate, 1) //todo: userId from Security
+        val entities = transactionRepository.findFiltered(startDate, endDate, userService.getCurrentUserId())
 
         return entities.map { entityToDto(it) }
     }
@@ -90,7 +92,7 @@ class TransactionServiceImpl(
         for (tagName in saveTransactionRequest.tags) {
             transactionToTagRepository.save(TransactionToTagEntity(
                     transactionId = savedTransaction.id!!,
-                    tagId = tagRepository.findByNameAndUserId(tagName, 1).id!! // todo: user from security
+                    tagId = tagRepository.findByNameAndUserId(tagName, userService.getCurrentUserId()).id!!
             ))
         }
 

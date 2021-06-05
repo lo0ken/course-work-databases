@@ -5,6 +5,8 @@ import com.friendlymoney.backend.dto.User
 
 interface UserService {
 
+    fun getCurrentUserId(): Int
+
     fun findByUserName(username: String): User?
 
     fun register(signUpRequest: SignUpRequest): User

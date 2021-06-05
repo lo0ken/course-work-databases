@@ -7,12 +7,14 @@ import com.friendlymoney.backend.repository.AccountGroupRepository
 import com.friendlymoney.backend.repository.AccountRepository
 import com.friendlymoney.backend.service.AccountBalanceService
 import com.friendlymoney.backend.service.AccountService
+import com.friendlymoney.backend.service.UserService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 @Transactional
 class AccountServiceImpl(
+        private val userService: UserService,
         private val accountBalanceService: AccountBalanceService,
         private val accountGroupRepository: AccountGroupRepository,
         private val accountRepository: AccountRepository
@@ -20,7 +22,7 @@ class AccountServiceImpl(
 
     override fun getAll(): List<Account> {
         val accountEntities = accountRepository.findAllByUserId(
-                1 // todo: call security service to get id of current user
+                userService.getCurrentUserId()
         )
 
         return accountEntities.map {
@@ -56,7 +58,7 @@ class AccountServiceImpl(
                 key = saveAccountRequest.id,
                 name = saveAccountRequest.name,
                 group = accountGroup,
-                userId = 1 //todo: call security service to get id of current user
+                userId = userService.getCurrentUserId()
         )
 
         val savedAccount = accountRepository.save(account)

@@ -2,6 +2,8 @@ package com.friendlymoney.backend.config
 
 
 
+import com.friendlymoney.backend.security.jwt.JwtTokenFilter
+import com.friendlymoney.backend.security.jwt.JwtTokenProvider
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
@@ -13,17 +15,22 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
-import java.util.*
 
 
 @Configuration
 @EnableWebSecurity
-class SecurityConfig(): WebSecurityConfigurerAdapter() {
+class SecurityConfig(
+        val jwtTokenProvider: JwtTokenProvider
+): WebSecurityConfigurerAdapter() {
 
     private val loginEndpoint = "/auth/login"
     private val signUpEndpoint = "/auth/signup"
+    private val currenciesEndpoint = "/currencies"
+    private val accountGroupsEndpoint = "/accountGroups"
 
-    /*override fun configure(http: HttpSecurity) {
+
+
+    override fun configure(http: HttpSecurity) {
         http
                 .httpBasic().disable()
                 .csrf().disable()
@@ -31,17 +38,11 @@ class SecurityConfig(): WebSecurityConfigurerAdapter() {
                 .authorizeRequests()
                 .antMatchers(loginEndpoint).permitAll()
                 .antMatchers(signUpEndpoint).permitAll()
+                .antMatchers(currenciesEndpoint).permitAll()
+                .antMatchers(accountGroupsEndpoint).permitAll()
                 .anyRequest().authenticated()
 
         http.addFilterBefore(JwtTokenFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter::class.java)
-    }*/
-
-    override fun configure(http: HttpSecurity) {
-        http
-                .httpBasic().disable()
-                .csrf().disable()
-                .cors().and()
-                .authorizeRequests().anyRequest().permitAll()
     }
 
     @Bean
