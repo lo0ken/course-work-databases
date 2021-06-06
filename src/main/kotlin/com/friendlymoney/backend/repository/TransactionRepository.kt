@@ -18,19 +18,10 @@ interface TransactionRepository: JpaRepository<TransactionEntity, Int> {
     fun findByKey(key: String): TransactionEntity?
 
 
-    @Query(
-            "select t.* from transaction t " +
-                    "join account acc on t.account_id = acc.id " +
-                    "left join transaction_tag tt on t.id = tt.transaction_id " +
-                    "left join tag on tt.tag_id = tag.id " +
-                    "where acc.user_id = :userId " +
-                    "and t.date >= :startDate " +
-                    "and t.date <= :endDate",
-            nativeQuery = true
-    )
+    @Query(value = "select * from getTransactionFiltered(:startDate, :endDate, :userId)", nativeQuery = true)
     fun findFiltered(@Param("startDate") startDate: LocalDate,
                      @Param("endDate") endDate: LocalDate,
-                     userId: Int
+                     @Param("userId") userId: Int
     ): List<TransactionEntity>
 
     fun deleteByKey(key: String)
