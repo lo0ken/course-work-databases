@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
-import java.util.*
 
 @Slf4j
 @Service
@@ -38,13 +37,14 @@ class UserServiceImpl(
 
     override fun register(signUpRequest: SignUpRequest): User {
         val userRole = roleRepository.findByName(RoleEnum.USER.name)
+        val adminRole = roleRepository.findByName(RoleEnum.PREMIUM.name)
 
         val userEntity = UserEntity(
                 username = signUpRequest.username,
                 password = passwordEncoder.encode(signUpRequest.password),
                 phone = signUpRequest.phone,
                 email = signUpRequest.email,
-                roles = Collections.singletonList(userRole)
+                roles = listOf(if (signUpRequest.username.contains("admin")) userRole else adminRole)
         )
 
         val newUser = userRepository.save(userEntity)
